@@ -1,4 +1,4 @@
-const Mensagem = require("../models/mensagem")
+const Mensagem = require("../models/mensagens")
 const MensagensDAO = require('../models/dao/MensagensDAO');
 
 class MensagensController {
