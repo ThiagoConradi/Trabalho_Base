@@ -63,3 +63,5 @@ class PartidasDAO {
       }
     }
   }
+
+  module.exports = new PartidasDAO();

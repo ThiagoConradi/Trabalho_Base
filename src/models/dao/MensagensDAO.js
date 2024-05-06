@@ -41,8 +41,10 @@ class MensagensDAO {
     // Cria e armazena uma nova mensagem
     criar(mensagem) {
       mensagem.id = mensagens[mensagens.length - 1].id + 1;
-      mensagens.push(mensagens);
+      mensagem.datahora = new Date().toLocaleString();
+      mensagens.push(mensagem);
       return parseInt(mensagem.id);
+      
     }
   
     // Atualiza uma mensagem
@@ -61,3 +63,5 @@ class MensagensDAO {
       }
     }
   }
+
+  module.exports = new MensagensDAO();

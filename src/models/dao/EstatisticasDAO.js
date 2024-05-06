@@ -26,6 +26,7 @@ let estatisticas = [
 ]
 
 class EstatisticasDAO {
+
   // Retorna a lista de estatisticas
   listar() {
     return estatisticas;
@@ -45,7 +46,10 @@ class EstatisticasDAO {
   criar(estatistica) {
     estatistica.id = estatisticas[estatisticas.length - 1].id + 1;
     estatisticas.push(estatistica);
+    // Calcule a pontuação para cada estatística
+    estatisticas.forEach(estatistica => estatistica.calcularPontuacao());
     return parseInt(estatistica.id);
+    
   }
 
   // Atualiza uma estatistica
@@ -63,6 +67,7 @@ class EstatisticasDAO {
       estatisticas.splice(index, 1);
     }
   }
+
 }
 
 module.exports = new EstatisticasDAO();
