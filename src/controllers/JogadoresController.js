@@ -114,9 +114,9 @@ class JogadoresController {
 
   }
 
-  // Atualiza a classificação dos jogadores pela ponduação das suas estatisticas
+  // Atualiza a classificação dos jogadores pela pontuação das suas estatisticas
   calculaClassificacao() {
-
+    let listaJogadores = JogadoresDAO.listar();
   }
 }
 
