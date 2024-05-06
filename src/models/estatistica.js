@@ -19,18 +19,13 @@ class Estatisticas {
 
   }
 
-  // Calcula a pontuação e os jogos jogados da estatistica
   calculaEstatistica() {
-    // Calcula os jogos jogados
-    this.jogosJogados = this.jogosPerdidos + this.jogosVencidos;
-  }
-
-  // Calcular a pontuação aqui
-
-  calcularPontuacao() {
+    // Calcular a pontuação aqui
     const pontosGanhos = this.jogosVencidos * 10;
     const pontosPerdidos = this.jogosPerdidos * 5;
     this.pontuacao = Math.max(0, pontosGanhos - pontosPerdidos);
+    // Calcula os jogos jogados
+    this.jogosJogados = this.jogosPerdidos + this.jogosVencidos;
   }
 }
 
