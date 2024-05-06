@@ -21,4 +21,8 @@ router.use('/mensagens', mensagensRoutes);
 const partidasRoutes = require('./partidasRoutes');
 router.use('/partidas', partidasRoutes);
 
+// Importa e utiliza as rotas de amizades
+const amizadesRoutes = require('./amizadesRoutes');
+router.use('/amizades', amizadesRoutes);
+
 module.exports = router;
