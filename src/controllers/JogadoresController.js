@@ -111,12 +111,36 @@ class JogadoresController {
 
   // Lista classificação ordenada dos 10 primeiros jogadores
   listaClassificacao(req, res) {
+    this.calculaClassificacao();
 
+    // Obtém todos os jogadores ordenados pela classificação
+    let jogadoresOrdenados = JogadoresDAO.listar().sort((a, b) => b.classificacao - a.classificacao);
+
+    // Seleciona os 10 primeiros jogadores
+    let top10Jogadores = jogadoresOrdenados.slice(0, 10);
+
+    // Formata os dados dos jogadores para a resposta
+    let listaClassificacao = top10Jogadores.map(jogador => {
+      return {
+        id: jogador.id,
+        nickName: jogador.nickName,
+        classificacao: jogador.classificacao,
+        pontuacao: jogador.estatisticas.pontuacao
+      };
+    });
+
+    // Faz o response para o browser
+    res.status(200).json({ classificacao: listaClassificacao });
   }
 
-  // Atualiza a classificação dos jogadores pela ponduação das suas estatisticas
+  // Atualiza a classificação dos jogadores pela pontuação das suas estatísticas
   calculaClassificacao() {
-
+    let jogadores = JogadoresDAO.listar();
+    jogadores.forEach(jogador => {
+      let pontuacao = jogador.estatisticas.pontuacao; // Supondo que a pontuação esteja nas estatísticas
+      jogador.classificacao = pontuacao; // Atualiza a classificação do jogador com base na pontuação
+      JogadoresDAO.atualizar(jogador.id, jogador);
+    });
   }
 }
 

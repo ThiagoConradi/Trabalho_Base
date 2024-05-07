@@ -4,8 +4,8 @@ const PartidasDAO = require('../models/dao/PartidasDAO');
 class PartidasController {
     // Cria uma nova partida (CREATE)
     create(req, res) {
-        let timevencedor = req.body.timevencedor;
-        let timeperdedor = req.body.timeperdedor;
+        let timevencedor = req.body.timeVencedor;
+        let timeperdedor = req.body.timePerdedor;
         let mvp = req.body.mvp;
 
         let partida = new Partida({ timeperdedor, timevencedor, mvp });

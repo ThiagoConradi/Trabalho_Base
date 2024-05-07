@@ -43,13 +43,13 @@ class PartidasDAO {
   // Cria e armazena uma nova partida
   criar(partida) {
     partida.id = partidas[partidas.length - 1].id + 1;
-    partidas.push(partidas);
+    partidas.push(partida);
     return parseInt(partida.id);
   }
 
   // Atualiza uma partida
   atualizar(id, partidaAtualizado) {
-    const index = partidas.findIndex(partida => partidas.id === id);
+    const index = partidas.findIndex(partidas => partidas.id === id);
     if (index !== -1) {
       partidas[index] = partidaAtualizado;
     }
@@ -57,7 +57,7 @@ class PartidasDAO {
 
   // Deleta uma partida
   deletar(id) {
-    const index = partidas.findIndex(partida => partida.id === id);
+    const index = partidas.findIndex(partidas => partidas.id === id);
     if (index !== -1) {
       partidas.splice(index, 1);
     }
