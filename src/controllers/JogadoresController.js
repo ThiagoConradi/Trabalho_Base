@@ -133,6 +133,7 @@ class JogadoresController {
     res.status(200).json({ classificacao: listaClassificacao });
   }
 
+
   // Atualiza a classificação dos jogadores pela pontuação das suas estatísticas
   calculaClassificacao() {
     let jogadores = JogadoresDAO.listar();
