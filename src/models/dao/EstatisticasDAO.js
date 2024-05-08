@@ -47,9 +47,9 @@ class EstatisticasDAO {
     estatistica.id = estatisticas[estatisticas.length - 1].id + 1;
     estatisticas.push(estatistica);
     // Calcule a pontuação para cada estatística
-    estatisticas.forEach(estatistica => estatistica.calcularPontuacao());
+    estatisticas.forEach(estatistica => estatistica.calculaEstatistica());
     return parseInt(estatistica.id);
-    
+
   }
 
   // Atualiza uma estatistica
