@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const router = new Router();
+const router = Router();
 
 // Importa e utiliza as rotas de jogadores
 const jogadoresRoutes = require('./jogadoresRoutes');
@@ -25,4 +25,7 @@ router.use('/partidas', partidasRoutes);
 const amizadesRoutes = require('./amizadesRoutes');
 router.use('/amizades', amizadesRoutes);
 
+
+
 module.exports = router;
+

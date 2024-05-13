@@ -1,15 +1,15 @@
 const express = require("express");
 const bodyParser = require('body-parser');
-const router = require("./routes/router")
+const router = require("./routes/router");
 
 class App {
   constructor() {
     this.server = express();
-    this.middleweres();
+    this.middlewares();
     this.routes();
   }
 
-  middleweres() {
+  middlewares() {
     // Deixando uma pasta pública para usar CSS, imagens estáticas e Javascript
     this.server.use(express.static('public'))
 
@@ -19,8 +19,9 @@ class App {
   }
 
   routes() {
-    this.server.use(router)
+    this.server.use(router);
   }
 }
 
 module.exports = new App().server;
+

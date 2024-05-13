@@ -3,6 +3,10 @@ const JogadoresDAO = require('../models/dao/JogadoresDAO');
 const EstatisticasDAO = require("../models/dao/EstatisticasDAO");
 
 class JogadoresController {
+  constructor(){
+    this.listaClassificacao = this.listaClassificacao.bind(this);
+  }
+
   // Cria um novo jogador (CREATE)
   create(req, res) {
     let nickName = req.body.nickName;
@@ -18,16 +22,16 @@ class JogadoresController {
       res.status(500).json({ message: "Não foi possível criar um usuário" })
   }
 
-  // Lista todos os jogadors (READ)
+  // Lista todos os jogadores (READ)
   list(req, res) {
-    // Busca o parâmetro na URL
+    // Busca os parâmetros na URL
     let nomeSearch = req.query.nomeSearch;
     let nickSearch = req.query.nickSearch;
 
-    // Copia o array jogadores
-    let listaJogadores = JogadoresDAO.listar().slice()
+    // Copia o array de jogadores
+    let listaJogadores = JogadoresDAO.listar().slice();
 
-    // Filtra os resultados se tiver alguma query
+    // Filtra os resultados se houver alguma query
     if (nomeSearch) {
       listaJogadores = listaJogadores.filter(jogador => jogador.nome.toUpperCase().includes(nomeSearch.toUpperCase()));
     }
@@ -39,78 +43,62 @@ class JogadoresController {
     if (listaJogadores.length === 0)
       res.status(200).json({ message: "Nenhum jogador encontrado" })
     else {
-      // Cria um novo array de jogadores
-      let listaJogadoresVerbose = []
-      // Percorre o array listaJogadores
-      for (let jogador of listaJogadores) {
-        // Cria uma nova variável que recebe a versão com os dados principais de jogador
-        let jogadorVerbose = jogador.principal()
-        // Atribui o novo jogador ao novo array
-        listaJogadoresVerbose.push(jogadorVerbose)
-      }
+      // Cria um novo array de jogadores com dados resumidos
+      let listaJogadoresVerbose = listaJogadores.map(jogador => jogador.principal());
       res.status(200).json({ jogadores: listaJogadoresVerbose })
     }
   }
 
-  // Mostrar um jogador (READ)
+  // Mostra um jogador específico (READ)
   show(req, res) {
     let id = req.params.id;
     let jogador = JogadoresDAO.buscarPorId(parseInt(id));
 
     if (jogador) {
-      // Cria uma nova variável que recebe a versão verbosa de jogador
-      let jogadorVerbose = jogador.verbose()
-      // Faz o response para o browser
-      res.status(200).json({ jogador: jogadorVerbose });
+      // Retorna os dados do jogador de forma detalhada
+      res.status(200).json({ jogador: jogador.verbose() });
     } else {
-      // Faz o response para o browser
       res.status(404).json({ message: 'Jogador não encontrado' });
     }
   }
 
-  // Atualizar um jogador (UPDATE)
+  // Atualiza os dados de um jogador (UPDATE)
   update(req, res) {
     let id = req.params.id;
     let jogador = JogadoresDAO.buscarPorId(parseInt(id));
     if (jogador) {
-      if (req.body.nickName) jogador.nickName = req.body.nickName
-      if (req.body.nome) jogador.nome = req.body.nome
-      if (req.body.classificacao) jogador.classificacao = req.body.classificacao
-      if (req.body.estatisticas) jogador.estatisticas = req.body.estatisticas
-      if (req.body.conquistas) jogador.conquistas = req.body.conquistas
+      // Atualiza os dados do jogador com base na requisição
+      if (req.body.nickName) jogador.nickName = req.body.nickName;
+      if (req.body.nome) jogador.nome = req.body.nome;
+      if (req.body.classificacao) jogador.classificacao = req.body.classificacao;
+      if (req.body.estatisticas) jogador.estatisticas = req.body.estatisticas;
+      if (req.body.conquistas) jogador.conquistas = req.body.conquistas;
 
-
-      // Atualiza a Jogador na persistência
-      JogadoresDAO.atualizar(id, jogador)
-      // Cria uma nova variável que recebe a versão verbosa de jogador
-      let jogadorVerbose = jogador.verbose()
-      // Faz o response para o browser
-      res.status(200).json({ jogador: jogadorVerbose });
-    }
-    else {
-      // Faz o response para o browser
+      // Atualiza o jogador na persistência
+      JogadoresDAO.atualizar(id, jogador);
+      
+      // Retorna os dados atualizados do jogador
+      res.status(200).json({ jogador: jogador.verbose() });
+    } else {
       res.status(404).json({ message: 'Jogador não encontrado' });
     }
   }
 
-  // Deleta um jogador (DELETE)
+  // Remove um jogador (DELETE)
   delete(req, res) {
     let id = parseInt(req.params.id);
 
     if (JogadoresDAO.exist(id)) {
       JogadoresDAO.deletar(id);
-
-      // Faz o response para o browser
-      res.status(200).send()
-    }
-    else {
-      // Faz o response para o browser
+      res.status(200).send();
+    } else {
       res.status(404).json({ message: 'Jogador não encontrado' });
     }
   }
 
-  // Lista classificação ordenada dos 10 primeiros jogadores
+  // Calcula e lista a classificação dos 10 melhores jogadores
   listaClassificacao(req, res) {
+    // Calcula a classificação dos jogadores
     this.calculaClassificacao();
 
     // Obtém todos os jogadores ordenados pela classificação
@@ -129,18 +117,19 @@ class JogadoresController {
       };
     });
 
-    // Faz o response para o browser
+    // Retorna a lista de classificação
     res.status(200).json({ classificacao: listaClassificacao });
   }
 
-
-  // Atualiza a classificação dos jogadores pela pontuação das suas estatísticas
+  // Atualiza a classificação dos jogadores pela pontuação das estatísticas
   calculaClassificacao() {
     let jogadores = JogadoresDAO.listar();
     jogadores.forEach(jogador => {
-      let pontuacao = jogador.estatisticas.pontuacao; // Supondo que a pontuação esteja nas estatísticas
-      jogador.classificacao = pontuacao; // Atualiza a classificação do jogador com base na pontuação
-      JogadoresDAO.atualizar(jogador.id, jogador);
+      let estatisticas = EstatisticasDAO.buscarPorId(jogador.id);
+      if (estatisticas) {
+        jogador.classificacao = estatisticas.pontuacao;
+        JogadoresDAO.atualizar(jogador.id, jogador);
+      }
     });
   }
 }
